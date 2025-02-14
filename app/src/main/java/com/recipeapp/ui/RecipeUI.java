@@ -121,8 +121,7 @@ public class RecipeUI {
                     break;
                 }
     
-                Ingredient ingredient = new Ingredient();
-                ingredient.setName(ingredientName);
+                Ingredient ingredient = new Ingredient(ingredientName);
                 ingredients.add(ingredient);
             }
     

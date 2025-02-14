@@ -39,8 +39,7 @@ public class CSVDataHandler implements DataHandler {
                 String[] ingredients = recipe[1].split(",");
                 ArrayList<Ingredient> ingredient = new ArrayList<>();
                 for (int i = 0; i < ingredients.length; i++) {
-                    Ingredient in = new Ingredient();
-                    in.setName(ingredients[i]);
+                    Ingredient in = new Ingredient(ingredients[i]);
                     ingredient.add(in);
                 }
                 Recipe r = new Recipe(name, ingredient);
