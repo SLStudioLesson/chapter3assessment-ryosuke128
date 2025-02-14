@@ -2,6 +2,8 @@ import com.recipeapp.datahandler.CSVDataHandler;
 import com.recipeapp.datahandler.DataHandler;
 import com.recipeapp.datahandler.JSONDataHandler;
 import com.recipeapp.ui.RecipeUI;
+import com.recipeapp.model.Recipe;
+import com.recipeapp.model.Ingredient;
 import java.io.*;
 
 public class App {
@@ -14,10 +16,33 @@ public class App {
             System.out.println("2. JSON");
             System.out.print("Select (1/2): ");
             String choice = reader.readLine();
-            
+            /*
+             * choiceで選択された数字に合わせてインスタンス化するクラスを分岐
+             * インスタンス化したオブジェクトを引数にRecipeUIクラスのdisplayMenu()メソッドを呼び出し
+             * displayMenu()メソッドの呼び出しはAppクラス内別メソッドで実施
+             */
+
+            DataHandler csv = new CSVDataHandler();
+            DataHandler json = new JSONDataHandler();
+            switch(choice) {
+                case "1":
+                    callDisplayMenu(csv);
+                    break;
+                case "2":
+                    callDisplayMenu(json);
+                    break;
+                default:
+                    callDisplayMenu(csv);
+                    break;
+            }
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
         }
+    }
+
+    public static void callDisplayMenu(DataHandler dataHandler) {
+        RecipeUI recipeUI = new RecipeUI(dataHandler);
+        recipeUI.displayMenu();
     }
 }
