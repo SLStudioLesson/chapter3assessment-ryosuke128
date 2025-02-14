@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.recipeapp.datahandler.DataHandler;
+import com.recipeapp.model.Ingredient;
 import com.recipeapp.model.Recipe;
 
 public class RecipeUI {
@@ -39,6 +40,7 @@ public class RecipeUI {
                     displayRecipes();
                         break;
                     case "2":
+                        addNewRecipe();
                         break;
                     case "3":
                         break;
@@ -58,8 +60,11 @@ public class RecipeUI {
     private void displayRecipes() {
         /*
          * フィールドのDataHandlerクラスからreadData()メソッドを呼び出し
-         * 受け取ったデータを初めの「,」で区切りレシピ名と材料に分割
-         * 上記を出力
+         * ArrayList<Recipe>からname、ArrayList<Ingredient>を取り出し
+         * ArrayList<Ingredient>からIngredientオブジェクトを取り出し
+         * 取り出したIngredientオブジェクトのnameを取り出し「,」で結合
+         * 上記Recipe.name、Ingredient.nameを出力
+         * readData()メソッドから何も帰ってこない場合はメッセージ出力
          * readData()メソッドから例外を受け取った場合はメッセージを出力
          * 
          */
@@ -71,17 +76,20 @@ public class RecipeUI {
                 System.out.println("-----------------------------------");
                 for (int i = 0; i < recipes.size(); i++) {
                     String name = recipes.get(i).getName();
-                    ArrayList<Ingredients> ingredients = recipe.get(i).getIngetIngredients();
+                    ArrayList<Ingredient> ingredients = recipes.get(i).getIngredients();
+                    String ingredient = "";
                     for (int j = 0; j < ingredients.size(); j++) {
-                        String ingredient = "";
-                        ingredient = ingredients.get(j).getName();
+                        if (j < ingredients.size() - 1) {
+                            ingredient = ingredient + ingredients.get(j).getName()+ ",";
+                        } else if (j == ingredients.size() - 1) {
+                            ingredient += ingredients.get(j).getName();
+                        }
                     }
                     System.out.println("Recipe Name: " + name);
                     System.out.println("Main Ingredients: " + ingredient);
                     System.out.println("-----------------------------------");
                 }
-                for (String recipe : recipes) {
-                }
+                
             }else {
                 System.out.println("No recipes available.");
             }
@@ -89,5 +97,43 @@ public class RecipeUI {
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
+    }
+
+    public void addNewRecipe() {
+        /*
+         * ユーザーに入力を要求
+         * Ingredientとして入力されたものは配列に格納
+         * doneが入力されるまで入力を繰り返す
+         * 上記情報を引数にRecipeクラスをインスタンス化
+         * インスタンス化したものを引数にwriteDataを呼び出し
+         */
+
+        try {
+            ArrayList<Ingredient> ingredients = new ArrayList<>();
+            System.out.println("Adding a new recipe.");
+            System.out.print("Enter recipe name: ");
+            String recipeName = this.reader.readLine();
+            System.out.println("Enter ingredients (type 'done' when finished):");
+            while (true) {
+                System.out.print("Ingredient: ");
+                String ingredientName = this.reader.readLine();
+                if (ingredientName.equals("done")) {
+                    break;
+                }
+    
+                Ingredient ingredient = new Ingredient();
+                ingredient.setName(ingredientName);
+                ingredients.add(ingredient);
+            }
+    
+            Recipe recipe = new Recipe(recipeName, ingredients);
+            dataHandler.writeData(recipe);
+        } catch (IOException e) {
+            System.out.println("Failed to add new recipe: " + e.getMessage());
+        }
+
+        System.out.println("Recipe added successfully.");
+
+
     }
 }
